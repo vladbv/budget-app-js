@@ -35,6 +35,7 @@ self.budgetFeedback.classList.remove('showItem');
 			this.budgetAmount.textContent = value;
 			this.budgetInput.value = '';
 			this.showBalance();
+
 		}
 	}
 }
