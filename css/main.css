@@ -5,6 +5,12 @@
   --mainRed: #b80c09;
   --mainBlue: #05668d;
 }
+.showItem{
+display:blockt;
+}
+.budget-zero{
+	display:none;
+}
 
 body {
   background: var(--mainWhite);
