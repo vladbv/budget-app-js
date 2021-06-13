@@ -85,15 +85,128 @@ self.expenseFeedback.classList.remove('showItem')
 		
 
 	}
+	else{
+let amount = parseFloat(amountValue);
+this.expenseInput.value = '';
+		this.amountInput.value = '';
+let expense = {
+	id:this.itemID,
+	title: expenseValue,
+	amount: amount,
 
 }
+this.itemID++;
+this.itemList.push(expense);
 
-	totalExpense(){
-let total = 400;
-		return total;
+this.addExpense(expense);
+this.showBalance();
+//show balance
+
+//Update balance
+
 	}
 
+
 }
+
+//add expense
+
+
+addExpense(expense){
+ 
+const div = document.createElement('div');
+
+	div.classList.add('expense');
+	div.innerHTML = `      
+		
+		<div class="expense-item d-flex justify-content-between align-items-baseline">
+		
+
+         <h6 class="expense-title mb-0 text-uppercase list-item"> ${expense.title}</h6>
+         <h5 class="expense-amount mb-0 list-item">${expense.amount}$</h5>
+
+         <div class="expense-icons list-item">
+
+          <a href="#" class="edit-icon mx-2" data-id="${expense.id}">
+           <i class="fas fa-edit"></i>
+          </a>
+          <a href="#" class="delete-icon" data-id="${expense.id}">
+           <i class="fas fa-trash"></i>
+          </a>
+         </div>
+        </div> 
+
+
+	`;
+
+this.expenseList.appendChild(div);
+}
+   totalExpense(){
+let total = 0;
+	   if(this.itemList.length > 0){
+	   total = this.itemList.reduce(function(acc, curr){ 
+		   acc += curr.amount;
+		   return acc;
+
+	   }, 0);
+	   }
+this.expenseAmount.textContent = total;
+return total;
+
+
+	}
+
+editExpense(element){
+
+	let id = parseInt(element.dataset.id);
+	let parent = element.parentElement.parentElement.parentElement;
+	console.log(parent);
+// this removes it from the dom
+this.expenseList.removeChild(parent);
+//this removes it from the array, the list
+	let expense = this.itemList.filter(function(item){
+return item.id === id;
+	});
+
+	//show value
+this.expenseInput.value = expense[0].title;
+	this.amountInput.value = expense[0].amount;
+	
+	//remove from the list
+let tempList = this.itemList.filter(function(item){
+return item.id !== id;
+});
+	this.itemList = tempList;
+this.showBalance();
+
+}
+
+deleteExpense(element){
+
+	let id = parseInt(element.dataset.id);
+
+	let parent = element.parentElement.parentElement.parentElement;
+
+	this.expenseList.removeChild(parent);
+let expense = this.itemList.filter(function(item){
+return item.id === id;
+});
+this.expenseInput.value = '';
+	this.amountInput.value = '';
+	//remove from the list
+let tempList = this.itemList.filter(function(item){
+return item.id !== id;
+});
+	
+this.itemList = tempList;
+	this.showBalance();
+
+
+}
+
+}
+
+
 
 function eventListeners(){
 const budgetForm = document.getElementById('budget-form');
@@ -118,6 +231,19 @@ expenseForm.addEventListener('submit', function(){
 ui.submitExpenseForm();
  });
 
+	//expense form clck
+
+	expenseList.addEventListener('click', function() {
+
+if(event.target.parentElement.classList.contains('edit-icon')){
+ui.editExpense(event.target.parentElement)
+}
+
+else if(event.target.parentElement.classList.contains('delete-icon')){
+ui.deleteExpense(event.target.parentElement);
+}
+
+	});
 
 	//when the expense is clicked
 expenseList.addEventListener('submit', function(){
